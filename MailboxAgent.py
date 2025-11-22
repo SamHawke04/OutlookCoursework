@@ -39,9 +39,51 @@ class Mailbox:
 #   ============================
 #              Features A
 #   ============================
+    # Feature FA.1 ☆☆☆☆☆ Complete
+    # Finds the ID and if it exists, returns it in variable gottedMail. Turns to string incase ID is an int
+    def get_email(self, m_id):
+        gottedMail = []
+        for e in self.emailData:
+            if str(m_id) == str(e.id):
+                gottedMail.append(e)
+                return gottedMail
+        return gottedMail
+    
+    # Feature FA.2 ☆☆☆☆☆ Complete
+    # Runs FA.1 to figure out whether the ID email does exist. If it doesn't spits out a message and sends user back to menu
+    # If an email does exist with that ID, shows that email using prettytable.
+    # It also should check and see if there is a conf tag, try ID 2 to see this!
+    def show_email(self, m_id):
+        showedMail = self.get_email(m_id)
+        if not showedMail:
+            print("No email found with that ID.")
+            input("☆ Press Enter to continue ☆")
+            return
+        mail_obj = showedMail[0]
+        gottedEmail = ColorTable(theme=Themes.OCEAN)
+        # If the email has a conf label, output this format
+        # Anyhting else, output the other format under the else statement
+        if mail_obj.tag == "conf":
+            gottedEmail.add_column("CONFIDENTIAL", ["CONFIDENTIAL"])
+            gottedEmail.add_column("From", [f"{mail_obj.from_email}"])
+            gottedEmail.add_column("Date", [f"{mail_obj.date}"])
+            gottedEmail.add_column("Subject", [f"{mail_obj.subject}"])
+            gottedEmail.add_column("Body", [f"(To be encrypted): {mail_obj.body}"])
+            gottedEmail.add_column("Flagged?", [f"{mail_obj.flag}"])
+        else:
+            gottedEmail.add_column("ID", [f"{mail_obj.id}"])
+            gottedEmail.add_column("From", [f"{mail_obj.from_email}"])
+            gottedEmail.add_column("To", [f"{mail_obj.to_email}"])
+            gottedEmail.add_column("Date", [f"{mail_obj.date}"])
+            gottedEmail.add_column("Subject", [f"{mail_obj.subject}"])
+            gottedEmail.add_column("Tag", [f"{mail_obj.tag}"])
+            gottedEmail.add_column("Body", [f"{mail_obj.body}"])
+            gottedEmail.add_column("Flag", [f"{mail_obj.flag}"])
+            gottedEmail.add_column("Read", [f"{mail_obj.read}"])
+        print(gottedEmail)
+        input("☆ Press Enter to continue ☆")
 
-
-
+  
 #   =============================
 #              Features B
 #   =============================
@@ -113,6 +155,10 @@ class Mailbox:
         newMail2 = Mail(len(self.emailData), "TheScariestSkeleton@gmail.com", "sh4175w@gre.ac.uk", "10/11/2025", "Mwuahahaha", "tag2","""BOO!""", False, False)
         self.emailData.append(newMail2)
 
+        newMail3 = Mail(len(self.emailData), "YoshikageKira@hotmail.com", "sh4175w@gre.ac.uk", "22/11/2025", "Jon Arbuckle", "conf",
+                        """Solve my Killer Queen Bites The Dust Sheer Heart Attacks""", True, True)
+        self.emailData.append(newMail3)
+
     # Choose how you want to search the emails
     def search_choice_menu(self):
 
@@ -134,12 +180,15 @@ class Mailbox:
         print(searchedUI)
         input("☆ Press Enter to continue ☆")
 
-    # user Input for specifically Searching by Date
+    # user Input for specifically Searching by Date and ID
     def search_date_menu(self):
-        return self.find(input("Enter Date: "))
+        return self.find(input("Enter Date (DD/MM/YYYY): "))
+
+    def search_id_menu(self):
+        return self.get_email(input("Enter Mail ID: "))
 
     # user input procedure for adding an email
-    def add_email_procedure(self):
+    def add_email_procedure(self, frm, to, date, subject, tag, body):
         frm = input("From: ")
         to = input("To: ")
         date = input("Date: ")
@@ -162,11 +211,14 @@ def ChosenSearchFunction(num):
     return switch.get(num, lambda: "Invalid choice")()
 
 # Function switch case dictionary
+# Switches 1 uses lambda, acts as the courier for m_id to show_email
 def ChosenFunction(num):
     switch={
-        "1": mailbox.show_emails,
-        "2": mailbox.add_email_procedure,
-        "3": mailbox.search_choice_menu,
+        "1": lambda: mailbox.show_email(input("Enter Mail ID: ")),
+        "2": mailbox.show_emails,
+        "3": mailbox.add_email_procedure,
+        "4": mailbox.search_choice_menu,
+       # "6": mailbox.del_email,
         "10": mailbox.exit
         }
     return switch.get(num, lambda: "Invalid choice")()
@@ -175,11 +227,12 @@ def mainMenu():
 
     FunctionChoiceUI = ColorTable(theme=Themes.OCEAN)
     FunctionChoiceUI.field_names = ["ID", "Function"]
-
-    FunctionChoiceUI.add_row(["1", "Display Mailbox"])
-    FunctionChoiceUI.add_row(["2", "Add New Mail"])
-    FunctionChoiceUI.add_row(["3", "Search By..."])
-    #ADD FUTURE FUNCTIONS HERE
+    
+    FunctionChoiceUI.add_row(["1", "Display A Mail"])
+    FunctionChoiceUI.add_row(["2", "Display Mailbox"])
+    FunctionChoiceUI.add_row(["3", "Add New Mail"])
+    FunctionChoiceUI.add_row(["4", "Search By..."])
+    FunctionChoiceUI.add_row(["5", "THIS DOESNT EXIST YET!!!"])
     FunctionChoiceUI.add_row(["10", "Exit"])
 
     print()

@@ -1,1 +1,0 @@
-print("Find my 7 jigsaw pieces")
