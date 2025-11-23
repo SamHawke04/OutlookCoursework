@@ -83,6 +83,33 @@ class Mailbox:
         print(gottedEmail)
         input("☆ Press Enter to continue ☆")
 
+    # Feature FA.3 ☆☆☆☆☆ Completed
+    # Runs FA.1 to figure out whether the ID email does exist. If it doesn't spits out a message and sends user back to menu
+    # If it does exist, uses the ID grabbed to change that emails tag into "bin", making it moved to the bin
+    def del_email(self, m_id):
+        gottedMail = self.get_email(m_id)
+        if not gottedMail:
+            print("No email found with that ID.")
+            input("☆ Press Enter to continue ☆")
+            return
+        for e in self.emailData:
+            if str(e.id) == str(m_id):
+                e.tag = "bin"
+                print("Email has been moved to bin.")
+                input("☆ Press Enter to continue ☆")
+                return
+
+    # Feature FA.4 ☆☆☆☆☆ TBC3
+#    def filter(self, frm):
+#        print("Epic coming feature soon!")
+
+
+    # Feature FA.5 ☆☆☆☆☆ TBC
+    # Will be in Confidential.py
+
+
+    # Feature FA.6 ☆☆☆☆☆ TBC
+    # TBC
   
 #   =============================
 #              Features B
@@ -218,7 +245,7 @@ def ChosenFunction(num):
         "2": mailbox.show_emails,
         "3": mailbox.add_email_procedure,
         "4": mailbox.search_choice_menu,
-       # "6": mailbox.del_email,
+        "5": lambda: mailbox.del_email(input("Enter Mail ID: ")),
         "10": mailbox.exit
         }
     return switch.get(num, lambda: "Invalid choice")()
@@ -232,7 +259,7 @@ def mainMenu():
     FunctionChoiceUI.add_row(["2", "Display Mailbox"])
     FunctionChoiceUI.add_row(["3", "Add New Mail"])
     FunctionChoiceUI.add_row(["4", "Search By..."])
-    FunctionChoiceUI.add_row(["5", "THIS DOESNT EXIST YET!!!"])
+    FunctionChoiceUI.add_row(["5", "Delete Email"])
     FunctionChoiceUI.add_row(["10", "Exit"])
 
     print()
