@@ -1,3 +1,13 @@
+#################################################################################################
+### COMP1811 - CW1 Outlook Simulator                                                          ###
+###            Mail Class                                                             ###
+###            <describe the purpose and overall functionality of the class defined here>     ###
+### Partner A:                                                                                ###
+###            <Full name as appears on Moodle>, SID<student ID>                              ###
+### Partner B:                                                                                ###
+###            <Full name as appears on Moodle>, SID<student ID>                              ###
+#################################################################################################
+
 class Mail:
     def __init__(self, id, from_email, to_email, date, subject, tag, body, flag, read):
         self.id = id

@@ -1,3 +1,13 @@
+#################################################################################################
+### COMP1811 - CW1 Outlook Simulator                                                          ###
+###            MailboxAgent Class                                                             ###
+###            <describe the purpose and overall functionality of the class defined here>     ###
+### Partner A:                                                                                ###
+###            <Full name as appears on Moodle>, SID<student ID>                              ###
+### Partner B:                                                                                ###
+###            <Full name as appears on Moodle>, SID<student ID>                              ###
+#################################################################################################
+
 from Mail import *
 from Confidential import *
 from Personal import *
@@ -63,12 +73,13 @@ class Mailbox:
         gottedEmail = ColorTable(theme=Themes.OCEAN)
         # If the email has a conf label, output this format
         # Anyhting else, output the other format under the else statement
+        # Uses f"" so that it doesn't show the curly brackets
         if mail_obj.tag == "conf":
             gottedEmail.add_column("CONFIDENTIAL", ["CONFIDENTIAL"])
             gottedEmail.add_column("From", [f"{mail_obj.from_email}"])
             gottedEmail.add_column("Date", [f"{mail_obj.date}"])
             gottedEmail.add_column("Subject", [f"{mail_obj.subject}"])
-            gottedEmail.add_column("Body", [f"(To be encrypted): {mail_obj.body}"])
+            gottedEmail.add_column("Encrypted Body Text", [f"{mail_obj.body}"])
             gottedEmail.add_column("Flagged?", [f"{mail_obj.flag}"])
         else:
             gottedEmail.add_column("ID", [f"{mail_obj.id}"])
@@ -96,20 +107,28 @@ class Mailbox:
             if str(e.id) == str(m_id):
                 e.tag = "bin"
                 print("Email has been moved to bin.")
-                input("☆ Press Enter to continue ☆")
+                input("☆ Press Enter to continue ☆ ")
                 return
 
-    # Feature FA.4 ☆☆☆☆☆ TBC3
-#    def filter(self, frm):
-#        print("Epic coming feature soon!")
+    # Feature FA.4 ☆☆☆☆☆ Completed
+    # First, using what the user typed as their email to find, we grab the email data and compare all the entires in it and see whether there is a sender with that email
+    # Then, we initialise prettyTable and setup the fieldnames to format the output. Depending on how many entries there are in filteredemails, it will make a row per email
+    # If there are entries in filteredemails (found a valid from mail), outputs the list with all emails with the from email the user asked for. If there aren't it lets the user know there aren't any of that email in the mailbox.
+    def show_filtered_emails(self, frm):
+        filteredemails = [e for e in self.emailData if str(frm) == str(e.from_email)]       
+        table = ColorTable(theme=Themes.OCEAN)
+        table.field_names = ["ID", "From", "To", "Date", "Subject", "Tag", "Body"]
+        for e in filteredemails:
+            table.add_row([e.id, e.from_email, e.to_email, e.date, e.subject, e.tag, e.body])
+        print()
+        if filteredemails:
+            print(table)
+        else:
+            print("No emails found from that sender...")
+        input("☆ Press Enter to continue ☆ ")
 
-
-    # Feature FA.5 ☆☆☆☆☆ TBC
+    # Feature FA.5 ☆☆☆☆☆ Completed
     # Will be in Confidential.py
-
-
-    # Feature FA.6 ☆☆☆☆☆ TBC
-    # TBC
   
 #   =============================
 #              Features B
@@ -160,8 +179,12 @@ class Mailbox:
         #The id is just its position in the list
         #Creates new Mail object with the correct variables and then appends to emailData
         #id, from_email, to_email, date, subject, tag, body, flag, read
-
-        newMail = Mail(len(self.emailData), frm, to, date, subject, tag, body, False, False)
+        if tag == "conf":
+            newMail = Confidential(len(self.emailData), frm, to, date, subject, tag, body, False, False)
+        elif tag == "prsnl":
+            newMail = Personal(len(self.emailData), frm, to, date, subject, tag, body, False, False)
+        else:
+            newMail = Mail(len(self.emailData), frm, to, date, subject, tag, body, False, False)
         self.emailData.append(newMail)
 
 #   ==============================
@@ -182,9 +205,12 @@ class Mailbox:
         newMail2 = Mail(len(self.emailData), "TheScariestSkeleton@gmail.com", "sh4175w@gre.ac.uk", "10/11/2025", "Mwuahahaha", "tag2","""BOO!""", False, False)
         self.emailData.append(newMail2)
 
-        newMail3 = Mail(len(self.emailData), "YoshikageKira@hotmail.com", "sh4175w@gre.ac.uk", "22/11/2025", "Jon Arbuckle", "conf",
+        newMail3 = Confidential(len(self.emailData), "YoshikageKira@hotmail.com", "sh4175w@gre.ac.uk", "22/11/2025", "Jon Arbuckle", "conf",
                         """Solve my Killer Queen Bites The Dust Sheer Heart Attacks""", True, True)
         self.emailData.append(newMail3)
+        
+        newMail4 = Mail(len(self.emailData), "sh4175w@gre.ac.uk", "sh4175w@gre.ac.uk", "22/11/2025", "NOTE TO SELF", "tag3", """Need to buy milk from Tesco on my way home!""", False, True)
+        self.emailData.append(newMail4)
 
     # Choose how you want to search the emails
     def search_choice_menu(self):
@@ -215,12 +241,12 @@ class Mailbox:
         return self.get_email(input("Enter Mail ID: "))
 
     # user input procedure for adding an email
-    def add_email_procedure(self, frm, to, date, subject, tag, body):
+    def add_email_procedure(self):
         frm = input("From: ")
         to = input("To: ")
         date = input("Date: ")
         subject = input("Subject: ")
-        tag = input("Tag: ")
+        tag = input("Tag (Use 'conf' to make it confidential or 'prsnl' to make it personal!): ")
         body = input("Body: ")
         self.add_email(frm, to, date, subject, tag, body)
         input("☆ Press Enter to continue ☆")
@@ -246,6 +272,7 @@ def ChosenFunction(num):
         "3": mailbox.add_email_procedure,
         "4": mailbox.search_choice_menu,
         "5": lambda: mailbox.del_email(input("Enter Mail ID: ")),
+        "6": lambda: mailbox.show_filtered_emails(input("Enter sender email: ")),
         "10": mailbox.exit
         }
     return switch.get(num, lambda: "Invalid choice")()
@@ -260,6 +287,7 @@ def mainMenu():
     FunctionChoiceUI.add_row(["3", "Add New Mail"])
     FunctionChoiceUI.add_row(["4", "Search By..."])
     FunctionChoiceUI.add_row(["5", "Delete Email"])
+    FunctionChoiceUI.add_row(["6", "Filter by Sender"])
     FunctionChoiceUI.add_row(["10", "Exit"])
 
     print()
