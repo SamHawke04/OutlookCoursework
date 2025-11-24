@@ -8,27 +8,113 @@
 ###            <Full name as appears on Moodle>, SID<student ID>                              ###
 #################################################################################################
 
+# DO NOT CHANGE CLASS OR METHOD NAMES
+# replace "pass" with your own code as specified in the CW spec.
+
+import pprint 
+
 class Mail:
-    def __init__(self, id, from_email, to_email, date, subject, tag, body, flag, read):
-        self.id = id
-        self.from_email = from_email
-        self.to_email = to_email
-        self.date = date
-        self.subject = subject
-        self.tag = tag
-        self.body = body
-        self.flag = flag
-        self.read = read
+    """ """
+    # DO NOT CHANGE CLASS OR METHOD NAMES
+    def  __init__(self,m_id,frm,to,date,subject,tag,body):
+        self._m_id = m_id
+        self._frm = frm
+        self._to = to
+        self._subject = subject
+        self._date = date
+        self._tag = tag      # reference to Outlook mail folder email is stored in
+                             # e.g. tag0 = inbox, tag1 = bin, tag2 = private, tag3 = bank_acct, tag4 = COMP1811, etc.
+        self._body = body
+        self._flag = False   # Boolean indicating whether email is important
+        self._read = False   # Boolean indicating whether the email is read or not.
 
-    def getAll(self):
-        return self.id, self.from_email, self.to_email, self.date, self.subject, self.tag, self.body, self.flag, self.read
+    # Format should be done from pretty print.
+    def __str__(self):
+        return f"m_id:{self.m_id}\tfrom:{self.frm}\t|{self.to}\t|{self.date}|{self.subject}|{self.tag}|{self.read}|{self.flag}"
 
-class Confidential(Mail):
-    def __init__(self, from_email, to_email, date, subject, tag, body):
-        super().__init__(from_email, to_email, date, subject, tag, body)
+    @property
+    def m_id(self):
+        return self._m_id
 
-class Personal(Mail):
-    def __init__(self, from_email, to_email, date, subject, tag, body):
-        super().__init__(from_email, to_email, date, subject, tag, body)
+    @property
+    def frm(self):
+        return self._frm
 
+    @property
+    def to(self):
+        return self._to
 
+    @property
+    def date(self):
+        return self._date
+
+    @property
+    def body(self):
+        return self._body
+
+    @property
+    def subject(self):
+        return self._subject
+
+    @property
+    def tag(self):
+        return self._tag
+
+    @property
+    def read(self):
+        return self._read
+
+    @property
+    def flag(self):
+        return self._flag
+
+    @tag.setter
+    # Pre: value in tags.
+    def tag(self, value):
+        self._tag = value
+
+    @read.setter
+    def read(self,value):
+        self._read = value
+
+    @flag.setter
+    def flag(self,value):
+        self._flag = value
+
+# FEATURES A (Partner A)
+    # FA.2
+    #
+    def show_email(self):
+        email_data = self.get_email(self.id)
+        if not email_data:
+            print("No email found with that ID.")
+            input("☆ Press Enter to continue ☆")
+            return
+        mail_obj = email_data[0]
+        email_data = {}
+        # If the email has a conf label, output this format
+        # Anyhting else, output the other format under the else statement
+        # Uses f"" so that it doesn't show the curly brackets
+        # If the email has a 'conf' label, populate the dictionary with confidential fields
+        if mail_obj.tag == "conf":
+        # Note: The original output had 'CONFIDENTIAL' twice. We'll simplify this.
+            email_data['STATUS'] = "CONFIDENTIAL"
+            email_data['From'] = mail_obj.from_email
+            email_data['Date'] = mail_obj.date
+            email_data['Subject'] = mail_obj.subject
+            email_data['Body'] = f"Encrypted Body Text: {mail_obj.body}"
+            email_data['Flagged?'] = mail_obj.flag
+    
+    # Otherwise, populate the dictionary with standard fields
+        else:
+            email_data['ID'] = mail_obj.id
+            email_data['From'] = mail_obj.from_email
+            email_data['To'] = mail_obj.to_email
+            email_data['Date'] = mail_obj.date
+            email_data['Subject'] = mail_obj.subject
+            email_data['Tag'] = mail_obj.tag
+            email_data['Body'] = mail_obj.body
+            email_data['Flag'] = mail_obj.flag
+            email_data['Read'] = mail_obj.read
+            pprint.pprint(email_data)
+        input("☆ Press Enter to continue ☆")

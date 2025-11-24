@@ -6,18 +6,25 @@
 ###            <Full name as appears on Moodle>, SID<student ID>                              ###
 #################################################################################################
 
-# Feature FA.5 ☆☆☆☆☆ Completed
-# Since this one is a tad bit more complicated, I'll comment on the lines of code where necessary
-from Mail import Mail
+# DO NOT CHANGE CLASS OR METHOD NAMES
+# replace "pass" with your own code as specified in the CW spec.
 
-class Confidential(Mail):
-    def __init__(self, id, from_email, to_email, date, subject, tag, body):
-        super().__init__(id, from_email, to_email, date, subject, tag, body)
-        self.body = self.encrypt(body)  # Encrypt message body on creation
+from Mail import *
 
+# FA.5.a
+class Confidential():
+    """ """
+    # DO NOT CHANGE CLASS NAME OR METHOD NAMES/SIGNATURES
+    # Add new method(s) as required in CW spec
 
-    def encrypt(self, message):
-        words = message.split()   # split into words
+    def __init__(self, m_id,frm,to,date,subject,tag,body):    # DO NOT MODIFY Attributes
+        super().__init__(m_id,frm,to,date,subject,tag,body)   # Inherits attributes from parent class DO NOT MODIFY
+        pass
+
+    # FA.5.b
+    #
+    def encrypt(self):
+        words = self.body.split()   # split into words
         word_count = len(words)
         result = []
         for word in words: # loop for amount of word in body of email

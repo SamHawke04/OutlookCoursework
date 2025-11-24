@@ -103,9 +103,7 @@ def loop():
                 # fnd 12/3/2025
                 pass
             case 'get' :                # retrieve and display email Mail object given email ID
-                # example command prompt:
-                # get 10
-                pass
+                mba.get_email(input("Enter Mail ID: "))
             case 'lst' :                # display entire mailbox
                 # example command prompt:
                 # lst

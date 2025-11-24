@@ -1,6 +1,6 @@
 #################################################################################################
 ### COMP1811 - CW1 Outlook Simulator                                                          ###
-###            Personal Class                                                                 ###
+###            Personal Class                                                             ###
 ###            <describe the purpose and overall functionality of the class defined here>     ###
 ### Partner B:                                                                                ###
 ###            <Full name as appears on Moodle>, SID<student ID>                              ###
@@ -23,5 +23,27 @@ class Personal():
     # FB.5.b
     #
     def add_stats(self):
-        """  """
-        pass
+        #Find @ in mail.frm
+        for index, character in enumerate(self.frm):
+            if character == "@":
+                UserID = self.frm[:index]
+        
+        #Get rid of "Body" in subject
+        self.subject[3:]
+        
+        #Find Longest Word
+        #Find Average
+        #Find wordCount
+        for index, chara in enumerate(self.body):
+            if chara == " ":
+                Averagelen =+ Counter
+                Counter = 0
+                wordCount =+ 1
+            else:
+                Counter =+ 1
+                if Counter > longwordleng:
+                    longwordleng = Counter
+        Averagelen = Averagelen / wordCount
+
+        #Add stats to body
+        self.body = UserID+self.body+" Stats: Word Count: "+wordCount+", Average word length: "+Averagelen+", Longest word length: "+longwordleng+"."
